@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.5" tiledversion="1.5.0" orientation="orthogonal" renderorder="right-down" width="64" height="36" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="1">
- <tileset firstgid="1" source="Sprites.tsx"/>
+ <editorsettings>
+  <export target="Map.json" format="json"/>
+ </editorsettings>
+ <tileset firstgid="1" name="SpritesSheetComplet" tilewidth="32" tileheight="32" tilecount="112" columns="7">
+  <image source="../../Info 2D/Dossiers de travail/Sprites/SpritesSheetComplet.png" width="224" height="512"/>
+ </tileset>
  <layer id="1" name="Ground" width="64" height="36">
   <data encoding="csv">
 6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,

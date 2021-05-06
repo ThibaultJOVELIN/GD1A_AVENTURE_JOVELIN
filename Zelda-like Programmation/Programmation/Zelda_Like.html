@@ -52,11 +52,11 @@ function preload ()
     this.load.image('star', 'assets/star.png');
     this.load.image('bomb', 'assets/bomb.png');
     this.load.image('Fond', 'assets/Background.png')
-    this.load.spritesheet('Heros', 'assets/Heros.png', { frameWidth: 52, frameHeight: 100 });
+    this.load.image('Heros', 'assets/Heros.png', { frameWidth: 52, frameHeight: 100 });
     this.load.spritesheet('Vie', 'assets/Points_De_Vie.png', { frameWidth: 80, frameHeight: 80 });
 
-    this.load.image('Tileset', 'Serene_Village_32x32.png')
-    this.load.tilemapTiledJSON('Map', 'ZeldaLike.json');
+    this.load.image('Tileset', 'Sprite.png')
+    this.load.tilemapTiledJSON('Map', 'Map.json');
     
 }
 
@@ -64,11 +64,15 @@ function create ()
 {
     let Village = this.make.tilemap({key:'Map'});
 
-    let Terrain = Village.addTilesetImage('Serene_Village_32x32','Tileset');
+    let Terrain = Village.addTilesetImage('Sprite','Tileset');
 
-    let Background = Village.createLayer('Calque de Tuiles 1', Terrain, 0, 0).setDepth(-2);
-    let Layer1 = Village.createLayer('Calque de Tuiles 2', Terrain, 0, 0).setDepth(-1);
-    let Layer2 = Village.createLayer('Calque de Tuiles 3', Terrain, 0, 0);
+    let Ground = Village.createLayer('Ground', Terrain, 0, 0).setDepth(-7);
+    let Layer1 = Village.createLayer('Layer 1', Terrain, 0, 0).setDepth(-6);
+    let Layer2 = Village.createLayer('Layer 2', Terrain, 0, 0).setDepth(-5);
+    let Layer3 = Village.createLayer('Layer 3', Terrain, 0, 0).setDepth(-4);
+    let Layer4 = Village.createLayer('Layer 4', Terrain, 0, 0).setDepth(-3);
+    let Layer5 = Village.createLayer('Layer 5', Terrain, 0, 0).setDepth(-2);
+    let Layer6 = Village.createLayer('Layer 6', Terrain, 0, 0).setDepth(-1);
 
     //  A simple background for our game
     this.coeur = this.add.sprite(80,80,'Vie').setScrollFactor(0);
@@ -77,14 +81,26 @@ function create ()
     player = this.physics.add.sprite(0, 0, 'Heros');
 
     // Collisions
-    this.physics.add.collider(player, Background);
-    Background.setCollisionByProperty({collisions:true});
+    this.physics.add.collider(player, Ground);
+    Ground.setCollisionByProperty({Collisions:true});
 
     this.physics.add.collider(player, Layer1);
-    Layer1.setCollisionByProperty({collisions:true});
+    Layer1.setCollisionByProperty({Collisions:true});
 
     this.physics.add.collider(player, Layer2);
-    Layer2.setCollisionByProperty({collisions:true});
+    Layer2.setCollisionByProperty({Collisions:true});
+
+    this.physics.add.collider(player, Layer3);
+    Layer3.setCollisionByProperty({Collisions:true});
+
+    this.physics.add.collider(player, Layer4);
+    Layer4.setCollisionByProperty({Collisions:true});
+
+    this.physics.add.collider(player, Layer5);
+    Layer5.setCollisionByProperty({Collisions:true});
+
+    this.physics.add.collider(player, Layer6);
+    Layer6.setCollisionByProperty({Collisions:true});
 
 
     //  Player physics properties. Give the little guy a slight bounce.
