@@ -49,14 +49,11 @@ var game = new Phaser.Game(config);
 function preload ()
 {
     
-    this.load.image('star', 'assets/star.png');
-    this.load.image('bomb', 'assets/bomb.png');
-    this.load.image('Fond', 'assets/Background.png')
-    this.load.image('Heros', 'assets/Heros.png', { frameWidth: 52, frameHeight: 100 });
-    this.load.spritesheet('Vie', 'assets/Points_De_Vie.png', { frameWidth: 80, frameHeight: 80 });
+    this.load.spritesheet('Hero', 'assets/Personnage.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('Vie', 'assets/BarreDeVie.png', { frameWidth: 400, frameHeight: 139 });
 
-    this.load.image('Tileset', 'Sprite.png')
-    this.load.tilemapTiledJSON('Map', 'Map.json');
+    this.load.image('Tileset', 'SpritesSheetComplet.png')
+    this.load.tilemapTiledJSON('Map', 'MapT.json');
     
 }
 
@@ -64,7 +61,7 @@ function create ()
 {
     let Village = this.make.tilemap({key:'Map'});
 
-    let Terrain = Village.addTilesetImage('Sprite','Tileset');
+    let Terrain = Village.addTilesetImage('SpritesSheetComplet','Tileset');
 
     let Ground = Village.createLayer('Ground', Terrain, 0, 0).setDepth(-7);
     let Layer1 = Village.createLayer('Layer 1', Terrain, 0, 0).setDepth(-6);
@@ -75,10 +72,10 @@ function create ()
     let Layer6 = Village.createLayer('Layer 6', Terrain, 0, 0).setDepth(-1);
 
     //  A simple background for our game
-    this.coeur = this.add.sprite(80,80,'Vie').setScrollFactor(0);
+    this.coeur = this.add.sprite(220,100,'Vie').setScrollFactor(0);
 
     // The player and its settings
-    player = this.physics.add.sprite(0, 0, 'Heros');
+    player = this.physics.add.sprite(560, 500, 'Hero');
 
     // Collisions
     this.physics.add.collider(player, Ground);
@@ -108,79 +105,71 @@ function create ()
     player.setCollideWorldBounds(true);
 
     //  Our player animations, turning, walking left and walking right.
-    this.anims.create({
-        key: 'left',
-        frames: this.anims.generateFrameNumbers('Heros', { start: 6, end: 12 }),
-        frameRate: 10,
-        repeat: -1
-    });
 
     this.anims.create({
         key: 'normal',
-        frames: [ { key: 'Heros', frame: 13 } ],
+        frames: [ { key: 'Heros', frame: 0 } ],
         frameRate: 20
     });
 
     this.anims.create({
-        key: 'right',
-        frames: this.anims.generateFrameNumbers('Heros', { start: 14, end: 20 }),
+        key: 'up',
+        frames: this.anims.generateFrameNumbers('Hero', { start: 0, end: 3 }),
         frameRate: 10,
         repeat: 1
     });
 
     this.anims.create({
-        key: 'Vie4',
+        key: 'down',
+        frames: this.anims.generateFrameNumbers('Hero', { start: 4, end: 7 }),
+        frameRate: 10,
+        repeat: 1
+    });
+    
+    this.anims.create({
+        key: 'left',
+        frames: this.anims.generateFrameNumbers('Hero', { start: 8, end: 11 }),
+        frameRate: 10,
+        repeat: -1
+    });
+
+    this.anims.create({
+        key: 'right',
+        frames: this.anims.generateFrameNumbers('Hero', { start: 12, end: 15 }),
+        frameRate: 10,
+        repeat: 1
+    });
+
+    this.anims.create({
+        key: 'Vie3',
         frames: [ { key: 'Vie', frame: 0 } ],
         frameRate: 20
     });
     this.anims.create({
-        key: 'Vie3',
+        key: 'Vie2',
         frames: [ { key: 'Vie', frame: 1 } ],
         frameRate: 20
     });
     this.anims.create({
-        key: 'Vie2',
+        key: 'Vie1',
         frames: [ { key: 'Vie', frame: 2 } ],
         frameRate: 20
     });
     this.anims.create({
-        key: 'Vie1',
+        key: 'Vie0',
         frames: [ { key: 'Vie', frame: 3 } ],
         frameRate: 20
     });
-    this.anims.create({
-        key: 'Vie0',
-        frames: [ { key: 'Vie', frame: 4 } ],
-        frameRate: 20
-    });
 
-    this.life = 4;
+    this.life = 3;
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
 
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
+    //  Give each star a slightly different bounce
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
 
-    stars.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
-
-    bombs = this.physics.add.group();
-
-    //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
-
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
-
+    // Camera
     this.cameras.main.startFollow(player)
     this.cameras.main.setBounds(0,0,Village.widthInPixels, Village.heightInPixels);
 }
@@ -198,39 +187,36 @@ function update ()
         return;
     }
 
-    this.coeur.anims.play('Vie4',true)
+    this.coeur.anims.play('Vie3',true)
 
     player.setVelocity(0);
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
-
         player.anims.play('left', true);
     }
 
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
-
         player.anims.play('right', true);
     }
     
     else if (cursors.up.isDown)
     {
         player.setVelocityY(-160);
-        player.anims.play('jump');
+        player.anims.play('up');
     }
 
     else if (cursors.down.isDown)
     {
         player.setVelocityY(160);
-        player.anims.play('jump');
+        player.anims.play('down');
     }
 
     else
     {
         player.setVelocityX(0);
-
         player.anims.play('normal');
     }
 
@@ -253,39 +239,9 @@ function update ()
             player.anims.play('left', true);
         }
     }
-    
-
 }
 
-function collectStar (player, star)
-{
-    star.disableBody(true, true);
-
-    //  Add and update the score
-    score += 10;
-    scoreText.setText('Score: ' + score);
-
-    if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-
-            child.enableBody(true, child.x, 0, true, true);
-
-        });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
-
-    }
-}
-
-function hitBomb (player, bomb)
+function Damage (player, Ennemi)
 {
     this.coeur.anims.play('Vie4',false)
     this.life -= 1
@@ -305,8 +261,6 @@ function hitBomb (player, bomb)
         this.coeur.anims.play('Vie0',true)
         gameOver = true;
     }
-
-   
 }
 
 </script>
